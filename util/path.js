@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 const filename = fileURLToPath(import.meta.url);
 export const __dirnames = path.dirname(filename);
 
-
+export const rootDir = path.join(__dirnames, "..");
 //by this function we get the parent directory.
 //proces.mainModule.filename gives the path of the main module that started the application. 
 // By using path.dirname() on this path, we can get the parent directory of the main module. 
