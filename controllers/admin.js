@@ -1,7 +1,5 @@
 import { Product } from "../model/product.js";
 
-
-
 export const getAddProduct = (req, res, next) => {
    res.render("admin/add-product", 
    {
@@ -16,14 +14,21 @@ export const getAddProduct = (req, res, next) => {
 };
 
 export const postAddProduct = (req, res, next) => {
-    const product = new Product(req.body.title);
+    const title = req.body.title;
+    const price = req.body.price;
+    const imageUrl = req.body.imageUrl;
+    const description = req.body.description;
+    console.log(imageUrl);
+
+    const product = new Product(title, imageUrl, price, description);
     product.save();
     res.redirect('/');
 };
 
-export const getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
-res.render("shop/product-list", {prods: products, docTitle: "Shop", path: "/", hasProducts: products.length > 0});
 
-    });
-    };
+export const getProducts = (req, res, next) => {
+   Product.fetchAll(products => {
+res.render("admin/products", {prods: products, pageTitle: "Admin Products", path: "/"});
+
+    }); 
+}

@@ -19,10 +19,14 @@ const getProductsFromFile = (cb) => {
 }
 
 export class Product {
-   constructor(t) {
-    this.title = t;
+   constructor(title, imageUrl, description, price) {
+    this.title = title;
+    this.imageUrl = imageUrl;
+    this.description = description;
+    this.price = price;
    }
 save() {
+  this.id = Math.random().toString();
     getProductsFromFile(products => {
         products.push(this);
         //first this get the data for the single products, later it trigger the call back
@@ -38,6 +42,13 @@ static fetchAll(cb) {
   getProductsFromFile(cb);
 }
 
+
+static findById(id, cb) {
+  getProductsFromFile(products => {
+      const product = products.find(p => p.id === id);
+      cb(product);
+  });
+   }
 }
 
 //when using the static key word in front of the function we can class this method like below
