@@ -11,7 +11,11 @@ router.get('/add-product', getAddProduct);
 router.get('/products', getProducts);
 router.post('/add-product', postAddProduct);
 router.get('/edit-product/:productId', getEditProduct);
-router.post('/edit-product', postEditProduct);
+ router.post('/edit-product', postEditProduct);
 router.post('/delete-product', postDeleteProduct);
+
+router.get('/test', (req, res) => {
+  res.send('Admin route is working');
+});
 
 export default router;

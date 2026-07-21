@@ -22,7 +22,7 @@ export const getProduct = (req, res, next) => {
 }
 
 export const getIndex = (req, res, next) => {
-  Product.fetchAll(products => {
+  Product.fetchAll().then(products => {
 res.render("shop/index", {prods: products, pageTitle: "Shop", path: "/"});
 
     });
@@ -30,10 +30,25 @@ res.render("shop/index", {prods: products, pageTitle: "Shop", path: "/"});
 
 
 export const getCart = (req, res, next) => {
-  res.render('shop/cart', {
+  Cart.getProducts(cart => {
+    Product.fetchAll(products => {
+      const cartProducts = [];
+       for (let product of products){
+        const cartProductData = cart.products.find(prod => prod.id === product.id);
+        if(cart.products.find(prod => prod.id === product.id)){
+           cartProducts.push({productData: product, qty: cartProductData.qty});
+        }
+      }
+    res.render('shop/cart', {
     path: '/cart',
-    pageTitle: 'Your Cart'
-  })
+    pageTitle: 'Your Cart',
+    products: cartProducts
+  }); 
+    });
+
+   
+  });
+  
 }
 
 export const getOrders = (req, res, next) => {
@@ -54,9 +69,22 @@ export const getCheckout = (req, res, next) => {
 
 export const postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
-  Cart.addProduct(prodId, product.price);
-  });
+  console.log("the product id", prodId);
+  Product.findById(prodId).then(product => {
+    return req.user.addToCart(product);
+    //req.user means requesting full user model
+  }).then(result => {
+    console.log(result);
+  })
   console.log(prodId);
   res.redirect('/cart');
+};
+
+export const postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findById(prodId, product => {
+
+    Cart.deleteProduct(prodId, product.price);
+    res.redirect('/cart');
+  });
 };
